@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PORTFOLIO /// ALPHA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root { --bg-color: #0a0a0a; --text-main: #e0e0e0; --accent: #60A5FA; --grid-line: rgba(255, 255, 255, 0.08); }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body { background-color: var(--bg-color); color: var(--text-main); font-family: 'Manrope', sans-serif; overflow-x: hidden; }
+        .noise-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 9998; opacity: 0.05; background-image: url("image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+        .cursor-dot, .cursor-circle { position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9999; pointer-events: none; }
+        .cursor-dot { width: 8px; height: 8px; background: var(--accent); }
+        .cursor-circle { width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.3); transition: width 0.3s, height 0.3s, background-color 0.3s; }
+        body.hovering .cursor-circle { width: 80px; height: 80px; background: rgba(96, 165, 250, 0.1); border-color: var(--accent); mix-blend-mode: difference; }
+        h1, h2, h3, .mono { font-family: 'Space Mono', monospace; text-transform: uppercase; }
+        .bg-grid { position: fixed; inset: 0; z-index: -1; background-size: 50px 50px; background-image: linear-gradient(to right, var(--grid-line) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px); mask-image: radial-gradient(circle at center, black 60%, transparent 100%); }
+        
+        /* Стили карточек */
+        .project-card {
+            display: block; border: 1px solid var(--grid-line); background: rgba(255,255,255,0.01);
+            transition: all 0.3s ease; position: relative; overflow: hidden;
+        }
+        .project-card:hover { border-color: var(--accent); transform: translateY(-5px); box-shadow: 0 10px 30px -10px rgba(96, 165, 250, 0.2); }
+        .project-card img { width: 100%; height: 250px; object-fit: cover; filter: grayscale(100%); transition: filter 0.3s; }
+        .project-card:hover img { filter: grayscale(0%); }
+        .project-info { padding: 1rem; border-top: 1px solid var(--grid-line); }
+        
+        .nav-link { position: relative; padding-left: 1.5rem; }
+        .nav-link::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 0; height: 1px; background: var(--accent); transition: width 0.3s; }
+        .nav-link:hover::before { width: 1rem; }
+        .nav-link:hover { color: var(--accent); }
+    </style>
+</head>
+<body>
+    <div class="noise-overlay"></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-circle"></div>
+    <div class="bg-grid"></div>
+
+    <header class="fixed top-0 w-full z-50 flex justify-between items-center px-6 py-6 mix-blend-difference border-b border-white/5 bg-black/50 backdrop-blur">
+        <div class="text-xl font-bold tracking-tighter mono hover-trigger text-[#60A5FA]" onclick="window.location.href='index.html'">ALPHA_GRP_</div>
+        <div class="hidden md:flex gap-8 text-sm mono text-gray-400">
+            <a href="index.html" class="hover-trigger nav-link transition-colors">ГЛАВНАЯ</a>
+            <a href="websites.html" class="hover-trigger nav-link transition-colors">WEB_DEV</a>
+            <a href="cnc.html" class="hover-trigger nav-link transition-colors">ЧПУ</a>
+            <a href="chess.html" class="hover-trigger nav-link transition-colors">ШАХМАТЫ</a>
+        </div>
+    </header>
+
+    <main class="pt-32 px-4 md:px-12 pb-20 min-h-screen">
+        <div class="mb-12">
+            <h1 class="text-5xl md:text-7xl font-bold mb-4 leading-none">АРХИВ<br><span class="text-[#60A5FA]">ПРОЕКТОВ</span></h1>
+            <p class="text-gray-400 max-w-xl mono text-sm">
+                // SELECT * FROM PROJECTS WHERE STATUS = 'COMPLETED'<br>
+                Ниже представлены реализованные веб-интерфейсы. Каждый проект — это уникальный код и дизайн.
+            </p>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- === НАЧАЛО СПИСКА ВСЕХ ПРОЕКТОВ === -->
+        <!-- ============================================== -->
+        <!-- 
+           ИНСТРУКЦИЯ ДЛЯ АМИРА:
+           Чтобы добавить новый проект, скопируй блок <a href="..." ...> ... </a> ниже
+           и вставь его ПЕРЕД закрывающим тегом </div> (который с классом grid).
+        -->
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- ПРОЕКТ 1: NEWLXP.RU -->
+            <a href="https://newlxp.ru/" target="_blank" class="project-card hover-trigger group">
+                <!-- Замени web.png на скриншот сайта, если есть -->
+                <img src="web.png" alt="NewLXP Screenshot"> 
+                <div class="project-info flex justify-between items-center">
+                    <div>
+                        <span class="block text-sm font-bold text-white group-hover:text-[#60A5FA] transition-colors">NEWLXP.RU</span>
+                        <span class="text-[10px] text-gray-500 mono">LANDING PAGE / 2026</span>
+                    </div>
+                    <i data-lucide="external-link" class="text-gray-500 group-hover:text-[#60A5FA]"></i>
+                </div>
+            </a>
+
+            <!-- ПРОЕКТ 2 (ЗАГЛУШКА) -->
+            <a href="#" target="_blank" class="project-card hover-trigger group">
+                <img src="web.png" alt="Project Screenshot">
+                <div class="project-info flex justify-between items-center">
+                    <div>
+                        <span class="block text-sm font-bold text-white group-hover:text-[#60A5FA] transition-colors">САЙТ КОМПАНИИ</span>
+                        <span class="text-[10px] text-gray-500 mono">CORPORATE / 2025</span>
+                    </div>
+                    <i data-lucide="external-link" class="text-gray-500 group-hover:text-[#60A5FA]"></i>
+                </div>
+            </a>
+
+            <!-- ПРОЕКТ 3 (ЗАГЛУШКА) -->
+            <a href="#" target="_blank" class="project-card hover-trigger group">
+                <img src="web.png" alt="Project Screenshot">
+                <div class="project-info flex justify-between items-center">
+                    <div>
+                        <span class="block text-sm font-bold text-white group-hover:text-[#60A5FA] transition-colors">ПОРТФОЛИО</span>
+                        <span class="text-[10px] text-gray-500 mono">PERSONAL / 2025</span>
+                    </div>
+                    <i data-lucide="external-link" class="text-gray-500 group-hover:text-[#60A5FA]"></i>
+                </div>
+            </a>
+
+            <!-- СЮДА ВСТАВЛЯТЬ НОВЫЕ ПРОЕКТЫ -->
+
+        </div>
+        <!-- ============================================== -->
+        <!-- === КОНЕЦ СПИСКА ВСЕХ ПРОЕКТОВ === -->
+        <!-- ============================================== -->
+
+    </main>
+
+    <footer class="border-t border-white/10 px-6 py-12 bg-black">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="text-xs mono text-gray-600">© 2026 ALPHA GROUP.</div>
+            <a href="index.html" class="text-xs mono text-gray-400 hover:text-white hover-trigger">BACK TO HOME</a>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorCircle = document.querySelector('.cursor-circle');
+        const hoverTriggers = document.querySelectorAll('.hover-trigger');
+        window.addEventListener('mousemove', (e) => {
+            cursorDot.style.left = e.clientX + 'px'; cursorDot.style.top = e.clientY + 'px';
+            setTimeout(() => { cursorCircle.style.left = e.clientX + 'px'; cursorCircle.style.top = e.clientY + 'px'; }, 50);
+        });
+        hoverTriggers.forEach(link => {
+            link.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            link.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+        });
+    </script>
+</body>
+</html>

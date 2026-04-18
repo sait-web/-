@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WEB_DEV /// ALPHA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root { --bg-color: #0a0a0a; --text-main: #e0e0e0; --accent: #60A5FA; --grid-line: rgba(255, 255, 255, 0.08); }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body { background-color: var(--bg-color); color: var(--text-main); font-family: 'Manrope', sans-serif; overflow-x: hidden; }
+        .noise-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 9998; opacity: 0.05; background-image: url("image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+        .cursor-dot, .cursor-circle { position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9999; pointer-events: none; }
+        .cursor-dot { width: 8px; height: 8px; background: var(--accent); }
+        .cursor-circle { width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.3); transition: width 0.3s, height 0.3s, background-color 0.3s; }
+        body.hovering .cursor-circle { width: 80px; height: 80px; background: rgba(96, 165, 250, 0.1); border-color: var(--accent); mix-blend-mode: difference; }
+        h1, h2, h3, .mono { font-family: 'Space Mono', monospace; text-transform: uppercase; }
+        .bg-grid { position: fixed; inset: 0; z-index: -1; background-size: 50px 50px; background-image: linear-gradient(to right, var(--grid-line) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px); mask-image: radial-gradient(circle at center, black 60%, transparent 100%); }
+        .nav-link { position: relative; padding-left: 1.5rem; }
+        .nav-link::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 0; height: 1px; background: var(--accent); transition: width 0.3s; }
+        .nav-link:hover::before { width: 1rem; }
+        .nav-link:hover { color: var(--accent); }
+        
+        .tech-input { background: rgba(255,255,255,0.03); border: 1px solid var(--grid-line); color: white; padding: 1rem; width: 100%; font-family: 'Space Mono'; transition: 0.3s; }
+        .tech-input:focus { outline: none; border-color: var(--accent); background: rgba(255,255,255,0.05); }
+        .tech-btn { background: var(--accent); color: black; font-family: 'Space Mono'; font-weight: bold; padding: 1rem 2rem; border: none; width: 100%; text-transform: uppercase; transition: 0.3s; }
+        .tech-btn:hover { background: white; box-shadow: 0 0 20px var(--accent); }
+
+        /* Стили для карточек портфолио */
+        .project-card {
+            display: block;
+            border: 1px solid var(--grid-line);
+            background: rgba(255,255,255,0.01);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .project-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px -10px rgba(96, 165, 250, 0.2);
+        }
+        .project-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            filter: grayscale(100%);
+            transition: filter 0.3s;
+        }
+        .project-card:hover img {
+            filter: grayscale(0%);
+        }
+        .project-info {
+            padding: 1rem;
+            border-top: 1px solid var(--grid-line);
+        }
+
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 100; display: none; align-items: center; justify-content: center; }
+        .modal-overlay.open { display: flex; }
+        .modal-box { background: #111; border: 1px solid var(--accent); padding: 2rem; max-width: 400px; width: 90%; position: relative; }
+    </style>
+</head>
+<body>
+    <div class="noise-overlay"></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-circle"></div>
+    <div class="bg-grid"></div>
+
+    <header class="fixed top-0 w-full z-50 flex justify-between items-center px-6 py-6 mix-blend-difference border-b border-white/5 bg-black/50 backdrop-blur">
+        <div class="text-xl font-bold tracking-tighter mono hover-trigger text-[#60A5FA]" onclick="window.location.href='index.html'">WEB_MODULE_</div>
+        <div class="hidden md:flex gap-8 text-sm mono text-gray-400">
+            <a href="index.html" class="hover-trigger nav-link transition-colors">ГЛАВНАЯ</a>
+            <a href="cnc.html" class="hover-trigger nav-link transition-colors">ЧПУ</a>
+            <a href="chess.html" class="hover-trigger nav-link transition-colors">ШАХМАТЫ</a>
+        </div>
+    </header>
+
+    <main class="pt-32 px-4 md:px-12 pb-20 min-h-screen">
+        <!-- Top Section: Intro & Main Image -->
+        <div class="flex flex-col md:flex-row gap-12 mb-24">
+            <div class="md:w-1/2">
+                <div class="inline-block px-3 py-1 border border-[#60A5FA]/30 text-[#60A5FA] text-xs mono mb-6">STATUS: AVAILABLE</div>
+                <h1 class="text-5xl md:text-7xl font-bold mb-8 leading-none">САЙТЫ<br>ВИЗИТКИ</h1>
+                <p class="text-gray-400 text-lg mb-8 max-w-md border-l-2 border-[#60A5FA] pl-6">
+                    Мы не используем конструкторы. Только чистый код. Это обеспечивает максимальную скорость загрузки и полную независимость от сторонних сервисов.
+                </p>
+                
+                <div class="grid grid-cols-2 gap-6 mt-12">
+                    <div class="border border-white/10 p-4 hover:border-[#60A5FA] transition-colors group">
+                        <i data-lucide="zap" class="text-[#60A5FA] mb-2 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="text-sm font-bold mono mb-1">СКОРОСТЬ</h3>
+                        <p class="text-xs text-gray-500">Загрузка менее 0.5 сек</p>
+                    </div>
+                    <div class="border border-white/10 p-4 hover:border-[#60A5FA] transition-colors group">
+                        <i data-lucide="smartphone" class="text-[#60A5FA] mb-2 group-hover:scale-110 transition-transform"></i>
+                        <h3 class="text-sm font-bold mono mb-1">АДАПТИВ</h3>
+                        <p class="text-xs text-gray-500">Идеально на любом экране</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="md:w-1/2 relative">
+                <div class="absolute -top-4 -left-4 w-full h-full border border-[#60A5FA]/30 z-0"></div>
+                <img src="web.png" alt="Web Design" class="relative z-10 w-full grayscale hover:grayscale-0 transition-all duration-500 opacity-80 hover:opacity-100 object-cover h-96 bg-gray-900">
+                <div class="absolute bottom-4 right-4 bg-black/80 backdrop-blur px-3 py-1 text-xs mono border border-white/10 z-20">
+                    FIG 1.0 // INTERFACE_DESIGN
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================== -->
+        <!-- === НАЧАЛО СПИСКА ПРОЕКТОВ (ПОРТФОЛИО) === -->
+        <!-- ============================================== -->
+        
+        <div class="mb-24 border-t border-white/10 pt-12">
+            <h2 class="text-2xl mono text-white mb-8 flex items-center gap-4">
+                <span class="w-2 h-2 bg-[#60A5FA]"></span> ИЗБРАННЫЕ ПРОЕКТЫ
+            </h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                
+                <!-- ПРОЕКТ 1: NEWLXP.RU -->
+                <a href="https://newlxp.ru/" target="_blank" class="project-card hover-trigger group">
+                    <!-- Замени web.png на скриншот сайта newlxp.ru, если есть -->
+                    <img src="web.png" alt="NewLXP Screenshot"> 
+                    <div class="project-info flex justify-between items-center">
+                        <div>
+                            <span class="block text-sm font-bold text-white group-hover:text-[#60A5FA] transition-colors">NEWLXP.RU</span>
+                            <span class="text-[10px] text-gray-500 mono">LANDING PAGE</span>
+                        </div>
+                        <i data-lucide="external-link" class="text-gray-500 group-hover:text-[#60A5FA]"></i>
+                    </div>
+                </a>
+
+                <!-- ПРОЕКТ 2 (ЗАГЛУШКА) -->
+                <a href="#" target="_blank" class="project-card hover-trigger group">
+                    <img src="web.png" alt="Project Screenshot">
+                    <div class="project-info flex justify-between items-center">
+                        <div>
+                            <span class="block text-sm font-bold text-white group-hover:text-[#60A5FA] transition-colors">САЙТ КОМПАНИИ</span>
+                            <span class="text-[10px] text-gray-500 mono">CORPORATE</span>
+                        </div>
+                        <i data-lucide="external-link" class="text-gray-500 group-hover:text-[#60A5FA]"></i>
+                    </div>
+                </a>
+
+                <!-- ПРОЕКТ 3 (ЗАГЛУШКА) -->
+                <a href="#" target="_blank" class="project-card hover-trigger group">
+                    <img src="web.png" alt="Project Screenshot">
+                    <div class="project-info flex justify-between items-center">
+                        <div>
+                            <span class="block text-sm font-bold text-white group-hover:text-[#60A5FA] transition-colors">ПОРТФОЛИО</span>
+                            <span class="text-[10px] text-gray-500 mono">PERSONAL</span>
+                        </div>
+                        <i data-lucide="external-link" class="text-gray-500 group-hover:text-[#60A5FA]"></i>
+                    </div>
+                </a>
+
+                <!-- === ИНСТРУКЦИЯ ДЛЯ АМИРА === -->
+                <!-- Чтобы добавить новый проект, скопируй блок <a href="..." ...> ... </a> выше -->
+                <!-- и вставь его СЮДА, перед закрывающим тегом </div> сетки -->
+
+            </div>
+
+            <!-- КНОПКА ПЕРЕХОДА НА ПОЛНОЕ ПОРТФОЛИО -->
+            <div class="mt-12 text-center">
+                <a href="portfolio.html" class="inline-flex items-center gap-2 px-8 py-4 border border-[#60A5FA] text-[#60A5FA] mono font-bold hover:bg-[#60A5FA] hover:text-black transition-all hover-trigger group">
+                    <span>ПОСМОТРЕТЬ ВСЕ ПРОЕКТЫ</span>
+                    <i data-lucide="arrow-right" data-width="16" class="group-hover:translate-x-1 transition-transform"></i>
+                </a>
+            </div>
+        </div>
+        
+        <!-- ============================================== -->
+        <!-- === КОНЕЦ СПИСКА ПРОЕКТОВ === -->
+        <!-- ============================================== -->
+
+
+        <!-- Bottom Section: Form & Details -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-12 border-t border-white/10 pt-12">
+            <div class="md:col-span-4 space-y-8">
+                <h2 class="text-2xl mono text-[#60A5FA]">> ПАРАМЕТРЫ</h2>
+                <ul class="space-y-4 mono text-sm text-gray-400">
+                    <li class="flex justify-between border-b border-white/5 pb-2">
+                        <span>HTML5 / CSS3</span>
+                        <span class="text-white">[OK]</span>
+                    </li>
+                    <li class="flex justify-between border-b border-white/5 pb-2">
+                        <span>SEO READY</span>
+                        <span class="text-white">[OK]</span>
+                    </li>
+                    <li class="flex justify-between border-b border-white/5 pb-2">
+                        <span>DOMAIN SETUP</span>
+                        <span class="text-white">[OK]</span>
+                    </li>
+                </ul>
+                <div class="p-4 bg-white/5 border border-white/10 text-xs text-gray-500 mono leading-relaxed">
+                    ВНИМАНИЕ: Мы не разрабатываем сложные порталы с базами данных. Наша специализация — быстрые, продающие одностраничные сайты.
+                </div>
+            </div>
+
+            <div class="md:col-span-8">
+                <h2 class="text-2xl mono mb-8 text-white">> ИНИЦИАЛИЗАЦИЯ ЗАКАЗА</h2>
+                <form id="orderForm" onsubmit="handleFormSubmit(event)" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs mono text-gray-500 mb-2">ТЕМАТИКА САЙТА *</label>
+                            <input type="text" name="topic" required class="tech-input hover-trigger" placeholder="Например: Стоматология">
+                        </div>
+                        <div>
+                            <label class="block text-xs mono text-gray-500 mb-2">ВАШЕ ИМЯ *</label>
+                            <input type="text" name="name" required class="tech-input hover-trigger" placeholder="Иван Иванов">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs mono text-gray-500 mb-2">ПОЖЕЛАНИЯ ПО ДИЗАЙНУ</label>
+                        <textarea name="design" rows="4" class="tech-input hover-trigger" placeholder="Цвета, референсы, стиль..."></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-xs mono text-gray-500 mb-2">КОНТАКТНЫЙ ТЕЛЕФОН *</label>
+                        <input type="tel" name="phone" required class="tech-input hover-trigger" placeholder="+7 (999) 000-00-00">
+                    </div>
+                    <button type="submit" class="tech-btn hover-trigger mt-4">ОТПРАВИТЬ ЗАПРОС</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <div id="messengerModal" class="modal-overlay" onclick="if(event.target===this)closeModal()">
+        <div class="modal-box">
+            <h3 class="text-xl mono mb-6 text-white">ВЫБОР ПРОТОКОЛА</h3>
+            <div class="space-y-3">
+                <button onclick="sendTo('max')" class="w-full p-4 border border-[#0077FF] hover:bg-[#0077FF]/20 text-left flex justify-between items-center group hover-trigger">
+                    <span class="mono font-bold text-[#0077FF]">MAX (VK)</span>
+                    <span class="text-xs text-gray-500 group-hover:text-white">ПРИОРИТЕТ</span>
+                </button>
+                <button onclick="warnAndSend('telegram')" class="w-full p-4 border border-white/10 hover:border-[#2AABEE] text-left flex justify-between items-center hover-trigger">
+                    <span class="mono">TELEGRAM</span>
+                    <span class="text-[10px] text-red-500">НЕСТАБИЛЬНО</span>
+                </button>
+                <button onclick="warnAndSend('whatsapp')" class="w-full p-4 border border-white/10 hover:border-[#25D366] text-left flex justify-between items-center hover-trigger">
+                    <span class="mono">WHATSAPP</span>
+                    <span class="text-[10px] text-red-500">НЕСТАБИЛЬНО</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="maxInstructionModal" class="modal-overlay" onclick="if(event.target===this)closeMaxModal()">
+        <div class="modal-box border-[#0077FF]">
+            <h3 class="text-xl mono mb-4 text-[#0077FF]">БУФЕР ОБМЕНА ЗАПОЛНЕН</h3>
+            <p class="text-sm text-gray-400 mb-6">1. Откроется MAX.<br>2. Найдите чат по номеру +7 (931) 104-96-44.<br>3. Вставьте текст (Ctrl+V).</p>
+            <button onclick="openMaxChat()" class="w-full bg-[#0077FF] text-white py-3 mono font-bold hover-trigger">ОТКРЫТЬ MAX</button>
+        </div>
+    </div>
+
+    <div id="warningModal" class="modal-overlay" onclick="if(event.target===this)closeWarningModal()">
+        <div class="modal-box border-red-500/50">
+            <h3 class="text-xl mono mb-4 text-red-500">ВНИМАНИЕ</h3>
+            <p class="text-sm text-gray-400 mb-6">Мессенджеры могут работать с задержкой. Рекомендуем MAX.</p>
+            <button onclick="redirectToMaxFromWarning()" class="w-full bg-[#0077FF] text-white py-3 mono font-bold mb-3 hover-trigger">ПЕРЕЙТИ В MAX</button>
+            <button id="fallbackBtn" class="w-full border border-white/10 py-2 text-xs mono text-gray-500 hover:text-white hover-trigger"></button>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorCircle = document.querySelector('.cursor-circle');
+        const hoverTriggers = document.querySelectorAll('.hover-trigger');
+        window.addEventListener('mousemove', (e) => {
+            cursorDot.style.left = e.clientX + 'px'; cursorDot.style.top = e.clientY + 'px';
+            setTimeout(() => { cursorCircle.style.left = e.clientX + 'px'; cursorCircle.style.top = e.clientY + 'px'; }, 50);
+        });
+        hoverTriggers.forEach(link => {
+            link.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            link.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+        });
+
+        let formData = null; let pendingText = ''; let selectedFallbackMessenger = '';
+        function handleFormSubmit(e) { 
+            e.preventDefault(); formData = new FormData(e.target); 
+            pendingText = `📋 *Заказ сайта*\n\n📌 Тема: ${formData.get('topic')}\n🎨 Дизайн: ${formData.get('design') || '-'}\n👤 Имя: ${formData.get('name')}\n📞 Телефон: ${formData.get('phone')}`;
+            document.getElementById('messengerModal').classList.add('open'); 
+        }
+        function closeModal() { document.getElementById('messengerModal').classList.remove('open'); }
+        function closeMaxModal() { document.getElementById('maxInstructionModal').classList.remove('open'); }
+        function closeWarningModal() { document.getElementById('warningModal').classList.remove('open'); }
+        function sendTo(type) {
+            if (type === 'max') {
+                navigator.clipboard.writeText(pendingText).then(() => { closeModal(); document.getElementById('maxInstructionModal').classList.add('open'); });
+            }
+        }
+        function openMaxChat() { window.open('https://web.max.ru/', '_blank'); closeMaxModal(); }
+        function warnAndSend(messenger) {
+            selectedFallbackMessenger = messenger;
+            const btn = document.getElementById('fallbackBtn');
+            const name = messenger === 'telegram' ? 'TELEGRAM' : 'WHATSAPP';
+            btn.innerHTML = `ВСЕ ЖЕ ${name} [НЕ ЖЕЛАТЕЛЬНО]`;
+            closeModal(); document.getElementById('warningModal').classList.add('open');
+        }
+        function redirectToMaxFromWarning() {
+            closeWarningModal();
+            navigator.clipboard.writeText(pendingText).then(() => { document.getElementById('maxInstructionModal').classList.add('open'); });
+        }
+        document.getElementById('fallbackBtn').onclick = function() {
+            let url = selectedFallbackMessenger === 'telegram' ? `https://t.me/group_alpha_support?text=${encodeURIComponent(pendingText)}` : `https://wa.me/79311049644?text=${encodeURIComponent(pendingText)}`;
+            window.open(url, '_blank'); closeWarningModal();
+        };
+    </script>
+</body>
+</html>

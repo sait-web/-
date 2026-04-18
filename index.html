@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALPHA GROUP /// SYSTEM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;600&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root { --bg-color: #0a0a0a; --text-main: #e0e0e0; --accent: #ccff00; --grid-line: rgba(255, 255, 255, 0.08); }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body { background-color: var(--bg-color); color: var(--text-main); font-family: 'Manrope', sans-serif; overflow-x: hidden; }
+        
+        .noise-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 9998; opacity: 0.05; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E"); }
+        .cursor-dot, .cursor-circle { position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9999; pointer-events: none; }
+        .cursor-dot { width: 8px; height: 8px; background: var(--accent); }
+        .cursor-circle { width: 40px; height: 40px; border: 1px solid rgba(255, 255, 255, 0.3); transition: width 0.3s, height 0.3s, background-color 0.3s; }
+        body.hovering .cursor-circle { width: 80px; height: 80px; background: rgba(204, 255, 0, 0.1); border-color: var(--accent); mix-blend-mode: difference; }
+
+        h1, h2, h3, .mono { font-family: 'Space Mono', monospace; text-transform: uppercase; }
+        .huge-text { font-size: clamp(3rem, 10vw, 12rem); line-height: 0.85; letter-spacing: -0.04em; font-weight: 700; color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.3); transition: all 0.5s ease; }
+        .huge-text:hover { color: var(--text-main); -webkit-text-stroke: 0px; }
+        
+        .bg-grid { position: fixed; inset: 0; z-index: -1; background-size: 50px 50px; background-image: linear-gradient(to right, var(--grid-line) 1px, transparent 1px), linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px); mask-image: radial-gradient(circle at center, black 60%, transparent 100%); }
+        
+        .marquee-container { overflow: hidden; white-space: nowrap; padding: 1rem 0; border-top: 1px solid var(--grid-line); border-bottom: 1px solid var(--grid-line); background: #000; }
+        .marquee-content { display: inline-block; animation: marquee 20s linear infinite; }
+        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+        .service-card { border: 1px solid var(--grid-line); transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); position: relative; overflow: hidden; }
+        .service-card:hover { border-color: var(--accent); background: rgba(204, 255, 0, 0.02); }
+        .service-card::after { content: ''; position: absolute; bottom: 0; right: 0; width: 0; height: 0; border-style: solid; border-width: 0 0 30px 30px; border-color: transparent transparent var(--accent) transparent; opacity: 0; transition: opacity 0.3s; }
+        .service-card:hover::after { opacity: 1; }
+
+        .nav-link { position: relative; padding-left: 1.5rem; }
+        .nav-link::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 0; height: 1px; background: var(--accent); transition: width 0.3s; }
+        .nav-link:hover::before { width: 1rem; }
+        .nav-link:hover { color: var(--accent); }
+        
+        .fade-in { animation: fadeIn 1s ease forwards; opacity: 0; transform: translateY(20px); }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body>
+    <div class="noise-overlay"></div>
+    <div class="cursor-dot"></div>
+    <div class="cursor-circle"></div>
+    <div class="bg-grid"></div>
+
+    <header class="fixed top-0 w-full z-50 flex justify-between items-center px-6 py-6 mix-blend-difference">
+        <div class="text-xl font-bold tracking-tighter mono hover-trigger" onclick="window.location.href='index.html'">ALPHA_GRP_</div>
+        <div class="hidden md:flex gap-8 text-sm mono text-gray-400">
+            <a href="websites.html" class="hover-trigger nav-link transition-colors">WEB_DEV</a>
+            <a href="cnc.html" class="hover-trigger nav-link transition-colors">CNC_MACHINING</a>
+            <a href="chess.html" class="hover-trigger nav-link transition-colors">ART_OBJECTS</a>
+        </div>
+        <button class="md:hidden hover-trigger text-white" onclick="document.getElementById('mobMenu').classList.toggle('hidden')"><i data-lucide="menu"></i></button>
+    </header>
+
+    <div id="mobMenu" class="hidden fixed inset-0 bg-black z-40 flex flex-col items-center justify-center gap-8 text-2xl mono">
+        <a href="websites.html" class="hover:text-[#ccff00]">WEB_DEV</a>
+        <a href="cnc.html" class="hover:text-[#ccff00]">CNC_MACHINING</a>
+        <a href="chess.html" class="hover:text-[#ccff00]">ART_OBJECTS</a>
+        <button onclick="document.getElementById('mobMenu').classList.add('hidden')" class="absolute top-6 right-6"><i data-lucide="x"></i></button>
+    </div>
+
+    <main class="relative pt-32 pb-20 px-4 md:px-12 min-h-screen flex flex-col justify-between">
+        <div class="flex-grow flex flex-col justify-center">
+            <p class="mono text-xs md:text-sm text-gray-500 mb-4 fade-in" style="animation-delay: 0.1s;">// SYSTEM_READY <span class="text-[#ccff00]">●</span> ONLINE</p>
+            <h1 class="fade-in" style="animation-delay: 0.2s;">
+                <div class="huge-text hover-trigger">ЦИФРОВОЙ</div>
+                <div class="huge-text hover-trigger text-right md:pl-20 text-[#ccff00]">ФИЗИЧЕСКИЙ</div>
+                <div class="huge-text hover-trigger">МИР</div>
+            </h1>
+            <div class="mt-12 max-w-xl fade-in" style="animation-delay: 0.4s;">
+                <p class="text-lg md:text-xl text-gray-400 leading-relaxed border-l border-[#ccff00] pl-6">
+                    Мы стираем грань между кодом и материей. Разработка сайтов, инженерия ЧПУ и арт-объекты из смолы. 
+                    <span class="text-white block mt-2 mono text-sm">/// EST. 2026</span>
+                </p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-20 fade-in" style="animation-delay: 0.6s;">
+            <div class="border border-white/10 p-6 flex justify-between items-end hover:bg-white/5 transition-colors group hover-trigger" onclick="window.location.href='websites.html'">
+                <div><span class="mono text-xs text-gray-500 block mb-2">01 / УСЛУГА</span><h3 class="text-2xl font-bold group-hover:text-[#ccff00] transition-colors">ВЕБ-РАЗРАБОТКА</h3></div>
+                <i data-lucide="arrow-up-right" class="text-gray-500 group-hover:text-[#ccff00]"></i>
+            </div>
+            <div class="border border-white/10 p-6 flex justify-between items-end hover:bg-white/5 transition-colors group hover-trigger" onclick="window.location.href='cnc.html'">
+                <div><span class="mono text-xs text-gray-500 block mb-2">02 / УСЛУГА</span><h3 class="text-2xl font-bold group-hover:text-[#ccff00] transition-colors">ЧПУ СИСТЕМЫ</h3></div>
+                <i data-lucide="arrow-up-right" class="text-gray-500 group-hover:text-[#ccff00]"></i>
+            </div>
+            <div class="border border-white/10 p-6 flex justify-between items-end hover:bg-white/5 transition-colors group hover-trigger md:col-span-2" onclick="window.location.href='chess.html'">
+                <div><span class="mono text-xs text-gray-500 block mb-2">03 / УСЛУГА</span><h3 class="text-2xl font-bold group-hover:text-[#ccff00] transition-colors">АРТ-ОБЪЕКТЫ</h3></div>
+                <i data-lucide="arrow-up-right" class="text-gray-500 group-hover:text-[#ccff00]"></i>
+            </div>
+        </div>
+    </main>
+
+    <div class="marquee-container mono text-sm text-gray-500">
+        <div class="marquee-content">+++ ГРУППА АЛЬФА +++ БЕЗ БАЗ ДАННЫХ +++ СТАТИЧЕСКАЯ АРХИТЕКТУРА +++ ВЫСОКАЯ СКОРОСТЬ +++ ОБРАБОТКА ДРЕВЕСИНЫ +++ ЭПОКСИДНАЯ СМОЛА +++ ВЕБ-ДИЗАЙН +++ G-КОД +++ ГРУППА АЛЬФА +++</div>
+    </div>
+
+    <footer class="bg-black border-t border-white/10 px-6 py-12">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
+            <div>
+                <h2 class="text-4xl md:text-6xl font-bold mb-4 hover-trigger">СВЯЗЬ</h2>
+                <a href="tel:+79311049644" class="text-xl md:text-3xl text-[#ccff00] hover:underline decoration-1 underline-offset-8 hover-trigger">+7 (931) 104-96-44</a>
+            </div>
+            <div class="text-right mono text-xs text-gray-600">
+                <p>ЛОКАЦИЯ: СПБ, РОССИЯ</p>
+                <p>УДАЛЕННЫЙ ДОСТУП</p>
+                <p class="mt-4">© 2026 ALPHA GROUP.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+        const cursorDot = document.querySelector('.cursor-dot');
+        const cursorCircle = document.querySelector('.cursor-circle');
+        const hoverTriggers = document.querySelectorAll('.hover-trigger');
+        window.addEventListener('mousemove', (e) => {
+            cursorDot.style.left = e.clientX + 'px'; cursorDot.style.top = e.clientY + 'px';
+            setTimeout(() => { cursorCircle.style.left = e.clientX + 'px'; cursorCircle.style.top = e.clientY + 'px'; }, 50);
+        });
+        hoverTriggers.forEach(link => {
+            link.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            link.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+        });
+    </script>
+</body>
+</html>
